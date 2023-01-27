@@ -1,86 +1,59 @@
-const canvas = document.getElementById('myCanvas');
-const ctx = canvas.getContext('2d');
+// get the canvas element
+var canvas = document.getElementById('game-canvas');
 
-let x = canvas.width / 2;
-let y = canvas.height - 40;
+// set canvas dimensions
+canvas.width = 960;
+canvas.height = 660;
 
-let dx = 2;
-let dy = -2;
+// get the canvas context
+var ctx = canvas.getContext('2d');
 
-let rightPressed = false;
-let leftPressed = false;
-let downPressed = false;
-let upPressed = false;
+// create Pac-Man object
+var pacman = {
+  x: 250,
+  y: 250,
+  radius: 20,
+  color: 'yellow',
+  direction: 'right',
+  draw: function () {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+    ctx.fillStyle = '#4885c3';
+    ctx.fill();
+  },
+};
 
-document.addEventListener('keydown', keyDownHandler, false);
-document.addEventListener('keyup', keyUpHandler, false);
+// draw Pac-Man on the canvas
+pacman.draw();
 
-function keyDownHandler(e) {
-  if (e.key === 'Right' || e.key === 'ArrowRight') {
-    rightPressed = true;
-  } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
-    leftPressed = true;
+// add keyboard event listener to control Pac-Man's movement
+document.addEventListener('keydown', function (event) {
+  if (event.keyCode == 37) {
+    pacman.direction = 'left';
+  } else if (event.keyCode == 38) {
+    pacman.direction = 'up';
+  } else if (event.keyCode == 39) {
+    pacman.direction = 'right';
+  } else if (event.keyCode == 40) {
+    pacman.direction = 'down';
   }
-  if (e.key === 'Up' || e.key === 'ArrowUp') {
-    upPressed = true;
-  } else if (e.key === 'Down' || e.key === 'ArrowDown') {
-    downPressed = true;
-  }
-}
+});
 
-function keyUpHandler(e) {
-  if (e.key === 'Right' || e.key === 'ArrowRight') {
-    rightPressed = false;
-  } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
-    leftPressed = false;
+// move Pac-Man based on its direction
+setInterval(function () {
+  if (pacman.direction == 'left') {
+    pacman.x -= 5;
+  } else if (pacman.direction == 'up') {
+    pacman.y -= 5;
+  } else if (pacman.direction == 'right') {
+    pacman.x += 5;
+  } else if (pacman.direction == 'down') {
+    pacman.y += 5;
   }
-  if (e.key === 'Up' || e.key === 'ArrowUp') {
-    upPressed = false;
-  } else if (e.key === 'Down' || e.key === 'ArrowDown') {
-    downPressed = false;
-  }
-}
 
-const ballRadius = 20;
-let pacmanX = 100;
-let pacmanY = 100;
-function drawBall() {
-  // drawing code
-  ctx.beginPath();
-  ctx.rect(0, 0, 960, 660);
-  ctx.fillStyle = '#0167b3';
-  ctx.fill();
-  ctx.closePath();
-}
-function draw() {
+  // clear the canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawBall();
-  ctx.beginPath();
-  ctx.arc(pacmanX, pacmanY, ballRadius, 0, Math.PI * 2);
-  ctx.fillStyle = '#4885c3';
-  ctx.fill();
-  ctx.closePath();
-  if (rightPressed) {
-    if (pacmanX > 930) {
-      return;
-    }
-    pacmanX += 7;
-  } else if (leftPressed) {
-    if (pacmanX < 30) {
-      return;
-    }
-    pacmanX -= 7;
-  }
-  if (upPressed) {
-    if (pacmanY < 30) {
-      return;
-    }
-    pacmanY -= 7;
-  } else if (downPressed) {
-    if (pacmanY > 630) {
-      return;
-    }
-    pacmanY += 7;
-  }
-}
-setInterval(draw, 10);
+
+  // redraw Pac-Man
+  pacman.draw();
+}, 50);
