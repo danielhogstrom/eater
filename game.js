@@ -42,13 +42,13 @@ document.addEventListener('keydown', function (event) {
 // move Pac-Man based on its direction
 setInterval(function () {
   if (pacman.direction == 'left') {
-    pacman.x -= 5;
+    if (pacman.x > 0 + pacman.radius) pacman.x -= 5;
   } else if (pacman.direction == 'up') {
-    pacman.y -= 5;
+    if (pacman.y > 0 + pacman.radius) pacman.y -= 5;
   } else if (pacman.direction == 'right') {
-    pacman.x += 5;
+    if (pacman.x + pacman.radius < canvas.width) pacman.x += 5;
   } else if (pacman.direction == 'down') {
-    pacman.y += 5;
+    if (pacman.y + pacman.radius < canvas.height) pacman.y += 5;
   }
 
   // clear the canvas
